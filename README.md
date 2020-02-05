@@ -1,2 +1,2 @@
-# WhatsApp-Bulk-Message-API
-WhatsApp-Bulk-Message-API is an API to send bulk message.
+# Whatsapp-Bulk-Message-API
+Whatsapp-Bulk-Message-API is an API to send bulk message.
