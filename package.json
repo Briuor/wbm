@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "express": "^4.17.1",
+    "p-queue": "^6.2.1",
+    "puppeteer": "^2.1.1",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
