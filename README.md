@@ -1,2 +1,3 @@
-# WhatsApp-Bulk-Message-API
-WhatsApp-Bulk-Message-API is an API to send bulk message.
+# wbm (Project not finished)
+wbm is an API to send bulk message in whatsapp.
+

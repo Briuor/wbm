@@ -1,8 +1,29 @@
 {
   "dependencies": {
-    "express": "^4.17.1",
     "p-queue": "^6.2.1",
     "puppeteer": "^2.1.1",
     "qrcode-terminal": "^0.12.0"
-  }
+  },
+  "name": "wbm",
+  "description": "wbm is an API to send bulk message.",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Briuor/wbm.git"
+  },
+  "keywords": [
+    "whatsapp",
+    "whatsapp-send-message",
+    "whatsapp-bulk-message",
+    "whatsapp-sender",
+    "whatsapp-message-sender"
+  ],
+  "author": "Briuor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Briuor/wbm/issues"
+  },
+  "homepage": "https://github.com/Briuor/wbm#readme"
 }
