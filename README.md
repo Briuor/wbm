@@ -3,7 +3,7 @@
 > wbm is an API to send bulk messages in whatsapp.
 
 <p align="center"> 
-<img src="https://raw.githubusercontent.com/Briuor/wbm/master/assets/demo.gif">
+<img style="border-radius: 5px" src="https://raw.githubusercontent.com/Briuor/wbm/master/assets/demo.gif">
 </p>
 
 ## Installation
@@ -20,7 +20,7 @@
 const wbm = require('wbm');
 
 wbm.start().then(async () => {
-    const phones = ['5535988841854']; // phone numbers ['5535988841854', ...]
+    const phones = ['5535988841854'];
     const message = "good morning";
     await wbm.send(phones, message);
 })
@@ -47,11 +47,11 @@ wbm.start().then(async () => {
 Send same message to every phone number.
 
 ##### phones
-Array of phone numbers: ['5535988841854', ...]
+Array of phone numbers: ['5535988841854', ...].<br />
 Type: `array`
 
 ##### message
-Message to send to every phone number
+Message to send to every phone number.<br />
 Type: `string`
 
 ### sendTo(phone, message)
@@ -59,12 +59,12 @@ Type: `string`
 Send message to a phone number.
 
 ##### phone
-Phone number: '5535988841854'.
+Phone number: '5535988841854'.<br />
 Type: `string`
 
 
 ##### message
-Message to send to phone number.
+Message to send to phone number.<br />
 Type: `string`
 
 ## License
