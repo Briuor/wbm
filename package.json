@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "p-queue": "^6.2.1",
+    "ora": "^4.0.3",
     "puppeteer": "^2.1.1",
     "qrcode-terminal": "^0.12.0"
   },
