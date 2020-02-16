@@ -3,7 +3,7 @@
 > wbm is an API to send bulk messages in whatsapp.
 
 <p align="center"> 
-<img src="https://github.com/Briuor/wbm/tree/master/assets/demo.gif">
+<img src="https://raw.githubusercontent.com/Briuor/wbm/master/assets/demo.gif">
 </p>
 
 ## Installation
@@ -12,7 +12,7 @@
 ```
 
 ## Usage
-:tw-26a0: **At the beginning it will display a QR Code on terminal, just scan it using whatsapp app.**
+**At the beginning it will display a QR Code on terminal, just scan it using whatsapp app.**
 
 ### Send same message to every contact
 
