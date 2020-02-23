@@ -1,3 +1,4 @@
+[![npm version](https://img.shields.io/npm/v/wbm.svg?color=%2378e08f)](https://www.npmjs.com/package/wbm)
 
 # wbm
 > wbm is an API to send bulk messages in whatsapp.
@@ -104,6 +105,10 @@ Type: `string`
 ##### message
 Message to send to phone number.<br />
 Type: `string`
+
+## Contributing
+
+Feel free to create pull requests. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
