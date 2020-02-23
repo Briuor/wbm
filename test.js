@@ -6,11 +6,26 @@ const wbm = require('./src/index');
 //     await wbm.send(phones, message);
 // })
 
+// wbm.start().then(async () => {
+//     const contacts = [{ phone: '5535988841854', name: "Bruno", age: 21 }];
+//     const message = 'hello {{name}} your age is {{age}}{{age}}';
+//     await wbm.sendCustom(contacts, message);
+// });
+
 wbm.start().then(async () => {
-    const contacts = [{ phone: '5535988841854', name: 'Bruno' }, { phone: '35988841854', name: 'Bruno' }, { phone: '5535988841854', name: 'Bruno' }];
+    const contacts = [
+        { phone: '5535988841854', name: 'Bruno', group: 'friend' },
+        { phone: '5535988841854', name: 'Will', group: 'customer' }
+    ];
     for (contact of contacts) {
-        let message = `hi ${contact.name}`;
+        let message = 'hi';
+        if (contact.group === 'customer') {
+            message = 'Good morning ' + contact.name;
+        }
+        else if (contact.group === 'friend') {
+            message = 'Hey ' + contact.name + '. Wassup?';
+        }
         await wbm.sendTo(contact.phone, message);
     }
-    await wbm.end();
+    await wbm.end()
 })

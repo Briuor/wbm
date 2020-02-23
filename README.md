@@ -20,8 +20,8 @@
 const wbm = require('wbm');
 
 wbm.start().then(async () => {
-    const phones = ['5535988841854'];
-    const message = "good morning";
+    const phones = ['5535988841854', '35988841854', '5535988841854'];
+    const message = 'Good Morning.';
     await wbm.send(phones, message);
 })
 
@@ -32,12 +32,36 @@ wbm.start().then(async () => {
 const wbm = require('wbm');
 
 wbm.start().then(async () => {
-    const contacts = [{ phone: '5535988841854', name: 'Bruno' }];
+    const contacts = [{ phone: '5535988841854', name: 'Bruno', age: 21 }];
+    const message = 'Hi {{name}}, your age is {{age}}';
+    // it will send 'Hi Bruno, your age is 21'
+    await wbm.sendCustom(contacts, message); 
+});
+```
+
+### Send custom messages using YOUR OWN RULE
+
+```javascript
+const wbm = require('wbm');
+
+wbm.start().then(async () => {
+    const contacts = [
+        { phone: '5535988841854', name: 'Bruno', group: 'friend' }, 
+        { phone: '5535988841854', name: 'Will', group: 'customer' }
+    ];
     for (contact of contacts) {
-        let message = 'good morning ' + contact.name;
+        let message = 'hi';
+        if(contact.group === 'customer') {
+            message = 'Good morning ' + contact.name;
+        }
+        else if(contact.group === 'friend') {
+            message = 'Hey ' + contact.name + '. Wassup?';
+        }
         await wbm.sendTo(contact.phone, message);
     }
+    await wbm.end()
 })
+
 ```
 
 ## API
@@ -52,6 +76,20 @@ Type: `array`
 
 ##### message
 Message to send to every phone number.<br />
+Type: `string`
+
+### sendCustom(contacts, message)
+
+Send custom message to every phone number.
+
+##### contacts
+Array of contact objects created by the user(with dynamic properties)<br />
+like [{phone: '5535988841854', name: 'Will', group: 'partner', age: 22', any: 'anything', ...}, ...].<br />
+Type: `array`
+
+##### message
+Message prototype to send to every phone number, text with curly braces like {{text}}<br />
+will be replaced by the contact property with same text name.<br />
 Type: `string`
 
 ### sendTo(phone, message)

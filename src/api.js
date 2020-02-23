@@ -1,12 +1,15 @@
 const puppeteer = require("puppeteer");
 const qrcode = require("qrcode-terminal");
-const ora = require('ora');
+const ora = require("ora");
 
 let browser = null;
 let page = null;
 let spinner = ora();
 let counter = { fails: 0, success: 0 }
 
+/**
+ * Initialize browser, page and setup page desktop mode
+ */
 async function start() {
     browser = await puppeteer.launch({
         headless: true,
@@ -23,17 +26,20 @@ async function start() {
     await generateQRCode();
 }
 
+/**
+ * Access whatsapp web page, get QR Code data and generate it on terminal
+ */
 async function generateQRCode() {
-    spinner.start('generating QRCode\n');
+    spinner.start("generating QRCode\n");
     await page.goto("https://web.whatsapp.com");
-    await page.waitForSelector('div[data-ref]');
+    await page.waitForSelector("div[data-ref]");
     const qrcodeData = await page.evaluate(() => {
         let qrcodeDiv = document.querySelector("div[data-ref]");
         return qrcodeDiv.getAttribute("data-ref");
     });
     qrcode.generate(qrcodeData, { small: true });
-    spinner.info('QRCode generated! Scan it using Whatsapp App.');
-    await page.waitForSelector('div[data-ref]', { hidden: true });
+    spinner.info("QRCode generated! Scan it using Whatsapp App.");
+    await page.waitForSelector("div[data-ref]", { hidden: true });
 }
 
 /**
@@ -42,13 +48,13 @@ async function generateQRCode() {
  * Send message to a phone number
  */
 async function sendTo(phone, message) {
-    spinner.start('Sending Message\n');
+    spinner.start("Sending Message\n");
     await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${message}`);
-    await page.waitForSelector('div#startup');
-    await page.waitForSelector('div#startup', { hidden: true });
+    await page.waitForSelector("div#startup");
+    await page.waitForSelector("div#startup", { hidden: true });
     try {
         await page.waitForSelector('div[data-tab="1"]', { timeout: 3000 });
-        await page.keyboard.press('Enter');
+        await page.keyboard.press("Enter");
         await page.waitFor(1000);
         spinner.succeed(`${phone} Sent`);
         counter.success++;
@@ -67,16 +73,40 @@ async function send(phones, message) {
     for (let phone of phones) {
         await sendTo(phone, message);
     }
-    await browser.close();
-    showResult();
+    await end();
 }
 
+/**
+ * @param {array} contacts Array of contacts
+ * @param {string} message Custom message to send to every phone number
+ * Send custom message to every phone number
+ */
+async function sendCustom(contacts, messagePrototype) {
+    for (let contact of contacts) {
+        await sendTo(contact.phone, generateCustomMessage(contact, messagePrototype));
+    }
+    await end();
+}
+
+/**
+ * @param {object} contact contact with several properties defined by the user
+ * @param {string} messagePrototype Custom message to send to every phone number
+ * @returns {string} message
+ * Replace all text between {{}} to respective contact property
+ */
+function generateCustomMessage(contact, messagePrototype) {
+    let message = messagePrototype;
+    for (let property in contact) {
+        message = message.replace(new RegExp(`{{${property}}}`, "g"), contact[property]);
+    }
+    return message;
+}
+
+/**
+ * Close browser and show results(number of messages sent and failed)
+ */
 async function end() {
     await browser.close();
-    showResult();
-}
-
-function showResult() {
     spinner.info(`Result: ${counter.success} sent, ${counter.fails} failed`);
 }
 
@@ -84,5 +114,6 @@ module.exports = {
     start,
     send,
     sendTo,
+    sendCustom,
     end
 }
