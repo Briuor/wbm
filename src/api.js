@@ -50,9 +50,8 @@ async function generateQRCode() {
 async function sendTo(phone, message) {
     spinner.start("Sending Message\n");
     await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${message}`);
-    await page.waitForSelector("div#startup");
-    await page.waitForSelector("div#startup", { hidden: true });
     try {
+        await page.waitForSelector("div#startup", { hidden: true, timeout: 10000 });
         await page.waitForSelector('div[data-tab="1"]', { timeout: 3000 });
         await page.keyboard.press("Enter");
         await page.waitFor(1000);
