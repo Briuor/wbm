@@ -11,7 +11,7 @@ wbm.start().then(async () => {
     { phone: '5535988841854', name: "Bruno", age: 21 },
     { phone: '5535988841854', name: "Bruno", age: 21 },
     { phone: '5535988841854', name: "Bruno", age: 21 }];
-    const message = 'hello {{name}} your age is {{age}}';
+    const message = 'hello {{name}} & your age is {{age}}';
     await wbm.sendCustom(contacts, message);
 });
 
