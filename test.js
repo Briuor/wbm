@@ -7,10 +7,10 @@ const wbm = require('./src/index');
 // })
 
 wbm.start().then(async () => {
-    const contacts = [{ phone: '5535988841854', name: "Bruno", age: 1 },
-    { phone: '5535988841854', name: "Bruno", age: 1 },
-    { phone: '5535988841854', name: "Bruno", age: 1 },
-    { phone: '5535988841854', name: "Bruno", age: 1 }];
+    const contacts = [{ phone: '5535988841854', name: "Bruno", age: 21 },
+    { phone: '5535988841854', name: "Bruno", age: 21 },
+    { phone: '5535988841854', name: "Bruno", age: 21 },
+    { phone: '5535988841854', name: "Bruno", age: 21 }];
     const message = 'hello {{name}} your age is {{age}}';
     await wbm.sendCustom(contacts, message);
 });

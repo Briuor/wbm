@@ -30,16 +30,27 @@ async function start() {
  * Access whatsapp web page, get QR Code data and generate it on terminal
  */
 async function generateQRCode() {
-    spinner.start("generating QRCode\n");
-    await page.goto("https://web.whatsapp.com");
-    await page.waitForSelector("div[data-ref]");
-    const qrcodeData = await page.evaluate(() => {
-        let qrcodeDiv = document.querySelector("div[data-ref]");
-        return qrcodeDiv.getAttribute("data-ref");
-    });
-    qrcode.generate(qrcodeData, { small: true });
-    spinner.info("QRCode generated! Scan it using Whatsapp App.");
-    await page.waitForSelector("div[data-ref]", { hidden: true });
+    try {
+        spinner.start("generating QRCode\n");
+        await page.goto("https://web.whatsapp.com");
+        await page.waitForSelector("div[data-ref]", { timeout: 60000 });
+        const qrcodeData = await page.evaluate(() => {
+            let qrcodeDiv = document.querySelector("div[data-ref]");
+            return qrcodeDiv.getAttribute("data-ref");
+        });
+        qrcode.generate(qrcodeData, { small: true });
+        spinner.info("QRCode generated! Scan it using Whatsapp App.");
+    } catch (err) {
+        spinner.warn("QR Code can't be generated, maybe your connection is too slow.");
+        process.exit();
+    }
+    // if user scan QR Code it will be hidden
+    try {
+        await page.waitForSelector("div[data-ref]", { timeout: 30000, hidden: true });
+    } catch (err) {
+        spinner.warn("Dont't be late to scan the QR Code.");
+        process.exit();
+    }
 }
 
 /**
@@ -48,16 +59,16 @@ async function generateQRCode() {
  * Send message to a phone number
  */
 async function sendTo(phone, message) {
-    spinner.start("Sending Message\n");
-    await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${message}`);
     try {
-        await page.waitForSelector("div#startup", { hidden: true, timeout: 10000 });
-        await page.waitForSelector('div[data-tab="1"]', { timeout: 3000 });
+        spinner.start("Sending Message\n");
+        await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${message}`);
+        await page.waitForSelector("div#startup", { hidden: true, timeout: 60000 });
+        await page.waitForSelector('div[data-tab="1"]', { timeout: 60000 });
         await page.keyboard.press("Enter");
         await page.waitFor(1000);
         spinner.succeed(`${phone} Sent`);
         counter.success++;
-    } catch (error) {
+    } catch (err) {
         spinner.fail(`${phone} Failed`);
         counter.fails++;
     }
