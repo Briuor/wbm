@@ -24,7 +24,7 @@ wbm.start().then(async () => {
     const phones = ['5535988841854', '35988841854', '5535988841854'];
     const message = 'Good Morning.';
     await wbm.send(phones, message);
-})
+});
 
 ```
 ### Send custom message to every contact
@@ -60,8 +60,8 @@ wbm.start().then(async () => {
         }
         await wbm.sendTo(contact.phone, message);
     }
-    await wbm.end()
-})
+    await wbm.end();
+});
 
 ```
 
