@@ -24,7 +24,7 @@ wbm.start().then(async () => {
     const phones = ['5535988841854', '35988841854', '5535988841854'];
     const message = 'Good Morning.';
     await wbm.send(phones, message);
-});
+}).catch(err => console.log(err));
 
 ```
 ### Send custom message to every contact
@@ -37,7 +37,7 @@ wbm.start().then(async () => {
     const message = 'Hi {{name}}, your age is {{age}}';
     // it will send 'Hi Bruno, your age is 21'
     await wbm.sendCustom(contacts, message); 
-});
+}).catch(err => console.log(err));
 ```
 
 ### Send custom messages using YOUR OWN RULE
@@ -61,7 +61,7 @@ wbm.start().then(async () => {
         await wbm.sendTo(contact.phone, message);
     }
     await wbm.end();
-});
+}).catch(err => console.log(err));
 
 ```
 
