@@ -1,19 +1,19 @@
 const wbm = require('./src/index');
-
-// wbm.start().then(async () => {
-//     const phones = ['5535988841854', '35988841854', '5535988841854']; // array of phone numbers ['5535988841854', ...]
-//     const message = 'hello';
-//     await wbm.send(phones, message);
-// })
-
 wbm.start().then(async () => {
-    const contacts = [{ phone: '5535988841854', name: "Bruno", age: 21 },
-    { phone: '5535988841854', name: "Bruno", age: 21 },
-    { phone: '5535988841854', name: "Bruno", age: 21 },
-    { phone: '5535988841854', name: "Bruno", age: 21 }];
-    const message = 'hello {{name}} your age is {{age}}';
-    await wbm.sendCustom(contacts, message);
-});
+    const phones = ['5535988841854', '35988841854', '5535988841854']; // array of phone numbers ['5535988841854', ...]
+    const message = 'hello';
+    await wbm.send(phones, message);
+}).catch(err => console.log(err));
+
+
+// wbm.start({ showBrowser: true }).then(async () => {
+//     const contacts = [{ phone: '5535988841854', name: "Bruno", age: 21 },
+//     { phone: '5535988841854', name: "Bruno", age: 21 },
+//     { phone: '5535988841854', name: "Bruno", age: 21 },
+//     { phone: '5535988841854', name: "Bruno", age: 21 }];
+//     const message = 'hello {{name}} your age is {{age}}';
+//     await wbm.sendCustom(contacts, message);
+// });
 
 // wbm.start().then(async () => {
 //     const contacts = [

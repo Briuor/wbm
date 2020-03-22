@@ -1,12 +1,11 @@
 {
   "dependencies": {
-    "ora": "^4.0.3",
     "puppeteer": "^2.1.1",
     "qrcode-terminal": "^0.12.0"
   },
   "name": "wbm",
-  "description": "wbm is an API to send bulk message.",
-  "version": "1.0.6",
+  "description": "wbm is an API to send bulk messages in whatsapp.",
+  "version": "1.0.7",
   "main": "src/index.js",
   "devDependencies": {},
   "repository": {
