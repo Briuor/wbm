@@ -1,19 +1,30 @@
 const puppeteer = require("puppeteer");
 const qrcode = require("qrcode-terminal");
+const { from, merge } = require('rxjs');
+const { take } = require('rxjs/operators');
+const path = require('path');
+var rimraf = require("rimraf");
 
 let browser = null;
 let page = null;
 let counter = { fails: 0, success: 0 }
+const tmpPath = path.resolve(__dirname, '../tmp');
 
 /**
  * Initialize browser, page and setup page desktop mode
  */
-async function start({ showBrowser = false, qrCodeData = false } = {}) {
+async function start({ showBrowser = true, qrCodeData = false, session = true } = {}) {
+    if (!session) {
+        deleteSession(tmpPath);
+    }
+
+    const args = {
+        headless: !showBrowser,
+        userDataDir: tmpPath,
+        args: ["--no-sandbox"]
+    }
     try {
-        browser = await puppeteer.launch({
-            headless: !showBrowser,
-            args: ["--no-sandbox"]
-        });
+        browser = await puppeteer.launch(args);
         page = await browser.newPage();
         // prevent dialog blocking page and just accept it(necessary when a message is sent too fast)
         page.on("dialog", async dialog => { await dialog.accept(); });
@@ -22,25 +33,61 @@ async function start({ showBrowser = false, qrCodeData = false } = {}) {
         await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
         page.setDefaultTimeout(60000);
 
-        if (qrCodeData) {
-            console.log('Getting QRCode data...');
-            console.log('Note: You should use wbm.waitQRCode() inside wbm.start() to avoid errors.');
-            return await getQRCodeData();
+        await page.goto("https://web.whatsapp.com");
+        if (session && await isAuthenticated()) {
+            if (qrCodeData) {
+                console.log('Getting QRCode data...');
+                console.log('Note: You should use wbm.waitQRCode() inside wbm.start() to avoid errors.');
+                return await getQRCodeData();
+            }
         }
         else {
             await generateQRCode();
         }
 
     } catch (err) {
+        deleteSession(tmpPath);
         throw err;
     }
 }
 
+function isAuthenticated() {
+    console.log('Authenticating...');
+    return merge(needsToScan(page), isInsideChat(page))
+        .pipe(take(1))
+        .toPromise();
+};
+
+function needsToScan() {
+    return from(
+        page
+            .waitForSelector('body > div > div > .landing-wrapper', {
+                timeout: 0,
+            }).then(() => false)
+    );
+};
+
+function isInsideChat() {
+    return from(
+        page
+            .waitForFunction(`
+        document.getElementsByClassName('app')[0] &&
+        document.getElementsByClassName('app')[0].attributes &&
+        !!document.getElementsByClassName('app')[0].attributes.tabindex
+        `,
+                {
+                    timeout: 0,
+                }).then(() => true)
+    );
+};
+
+function deleteSession() {
+    rimraf.sync(tmpPath);
+}
 /**
  * return the data used to create the QR Code
  */
 async function getQRCodeData() {
-    await page.goto("https://web.whatsapp.com");
     await page.waitForSelector("div[data-ref]", { timeout: 60000 });
     const qrcodeData = await page.evaluate(() => {
         let qrcodeDiv = document.querySelector("div[data-ref]");

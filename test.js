@@ -1,5 +1,6 @@
 const wbm = require('./src/index');
-wbm.start().then(async () => {
+
+wbm.start({ session: true }).then(async () => {
     const phones = ['5535988841854', '35988841854', '5535988841854']; // array of phone numbers ['5535988841854', ...]
     const message = 'hello';
     await wbm.send(phones, message);
