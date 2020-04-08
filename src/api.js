@@ -13,7 +13,7 @@ const tmpPath = path.resolve(__dirname, '../tmp');
 /**
  * Initialize browser, page and setup page desktop mode
  */
-async function start({ showBrowser = true, qrCodeData = false, session = true } = {}) {
+async function start({ showBrowser = false, qrCodeData = false, session = true } = {}) {
     if (!session) {
         deleteSession(tmpPath);
     }
@@ -35,14 +35,16 @@ async function start({ showBrowser = true, qrCodeData = false, session = true } 
 
         await page.goto("https://web.whatsapp.com");
         if (session && await isAuthenticated()) {
+            return;
+        }
+        else {
             if (qrCodeData) {
                 console.log('Getting QRCode data...');
                 console.log('Note: You should use wbm.waitQRCode() inside wbm.start() to avoid errors.');
                 return await getQRCodeData();
+            } else {
+                await generateQRCode();
             }
-        }
-        else {
-            await generateQRCode();
         }
 
     } catch (err) {
@@ -56,7 +58,7 @@ function isAuthenticated() {
     return merge(needsToScan(page), isInsideChat(page))
         .pipe(take(1))
         .toPromise();
-};
+}
 
 function needsToScan() {
     return from(
@@ -65,7 +67,7 @@ function needsToScan() {
                 timeout: 0,
             }).then(() => false)
     );
-};
+}
 
 function isInsideChat() {
     return from(
@@ -79,7 +81,7 @@ function isInsideChat() {
                     timeout: 0,
                 }).then(() => true)
     );
-};
+}
 
 function deleteSession() {
     rimraf.sync(tmpPath);
@@ -137,7 +139,12 @@ async function QRCodeExeption(msg) {
  * @param {string} message Message to send to phone number
  * Send message to a phone number
  */
-async function sendTo(phone, message) {
+async function sendTo(phoneOrContact, message) {
+    let phone = phoneOrContact;
+    if (typeof phoneOrContact === "object") {
+        phone = phoneOrContact.phone;
+        message = generateCustomMessage(phoneOrContact, message);
+    }
     try {
         process.stdout.write("Sending Message...\r");
         await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURI(message)}`);
@@ -162,23 +169,10 @@ async function sendTo(phone, message) {
  * @param {string} message Message to send to every phone number
  * Send same message to every phone number
  */
-async function send(phones, message) {
-    for (let phone of phones) {
-        await sendTo(phone, message);
+async function send(phoneOrContacts, message) {
+    for (let phoneOrContact of phoneOrContacts) {
+        await sendTo(phoneOrContact, message);
     }
-    await end();
-}
-
-/**
- * @param {array} contacts Array of contacts
- * @param {string} message Custom message to send to every phone number
- * Send custom message to every phone number
- */
-async function sendCustom(contacts, messagePrototype) {
-    for (let contact of contacts) {
-        await sendTo(contact.phone, generateCustomMessage(contact, messagePrototype));
-    }
-    await end();
 }
 
 /**
@@ -207,7 +201,6 @@ module.exports = {
     start,
     send,
     sendTo,
-    sendCustom,
     end,
     waitQRCode
 }

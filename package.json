@@ -7,7 +7,7 @@
   },
   "name": "wbm",
   "description": "wbm is an API to send bulk messages in whatsapp.",
-  "version": "1.0.7",
+  "version": "1.1.8",
   "main": "src/index.js",
   "devDependencies": {},
   "repository": {
@@ -16,10 +16,14 @@
   },
   "keywords": [
     "whatsapp",
+    "whatsapp-api",
+    "whatsapp-library",
     "whatsapp-send-message",
     "whatsapp-bulk-message",
     "whatsapp-sender",
-    "whatsapp-message-sender"
+    "whatsapp-message-sender",
+    "bulk-messages",
+    "bulk-messages-api"
   ],
   "author": "Briuor",
   "license": "MIT",
