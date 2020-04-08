@@ -1,3 +1,6 @@
+# Temporary session file
+tmp/
+
 # Logs
 logs
 *.log
