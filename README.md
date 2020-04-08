@@ -74,18 +74,18 @@ wbm.start().then(async () => {
 
 ## API
 ### start(options)
-* ##### options
+* **options**<br />
 	Object containing optional parameters as attribute.<br />
 	Type: `object`<br />
-	* ##### showBrowser 
+	* **showBrowser**<br />
 	Show browser running the script.<br />
 	Default: `false`<br />
 	Type: `boolean`<br />
-	* ##### qrCodeData 
+	* **qrCodeData**<br />
 	Instead of generate the QR Code, returns the data used to generate the QR Code as promise.<br />
 	Default: `false`<br />
 	Type: `boolean`<br />
-	* ##### session 
+	* **session**<br />
 	Keep user session, so the user must scan the QR Code once.<br />
 	Default: `true`<br />
 	Type: `boolean`
@@ -104,15 +104,15 @@ wbm.start({showBrowser: true, qrCodeData: true, session: false})
 
 ### send(phoneOrContacts, message)
 
-Send same message to every phone number.
+Send message to every phone number.
 
-- ##### phoneOrContacts
+- **phoneOrContacts**<br />
 Array of phone numbers: ['5535988841854', ...].<br />
 Or <br />
 Array of contacts: [{phone: '5535988841854', name: 'Will', group: 'partner', age: 22', any: 'anything', ...}, ...]<br />
 Type: `array`
 
-- ##### message
+- **message**<br />
 Message to send to every phone number.<br />
 Text inside curly braces like {{attribute}} will be replaced by the contact object respective attribute.<br />
 Type: `string`
@@ -136,16 +136,15 @@ wbm.start().then(async () => {
 ### sendTo(phoneOrContact, message)
 
 Send message to a single phone number.
-*When using wbm.sendTo() make sure to use wbm.end() at the end of wbm.start().*
 
-- ##### phoneOrContact
+- **phoneOrContact**<br />
 Phone number. Example '5535988841854'.<br />
 Type: `string`<br />
 Or
 Contact object. Example: {phone: '5535988841854', name: 'Will', group: 'partner'}<br />
 Type: `object`
 
-- ##### message
+- **message**<br />
 Message to send to phone number.<br />
 Text inside curly braces like {{attribute}} will be replaced by the contact object respective attribute.<br />
 Type: `string`
