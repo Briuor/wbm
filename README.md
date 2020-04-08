@@ -36,9 +36,9 @@ const wbm = require('wbm');
 
 wbm.start().then(async () => {
     const contacts = [
-	{ phone: '5535988841854', name: 'Bruno', age: 21 },
-	{ phone: '5535988841854', name: 'Will', age: 33 }
-	];
+        { phone: '5535988841854', name: 'Bruno', age: 21 },
+        { phone: '5535988841854', name: 'Will', age: 33 }
+    ];
     const message = 'Hi {{name}}, your age is {{age}}';
     // Hi Bruno, your age is 21
     // Hi Will, your age is 33
@@ -94,11 +94,11 @@ wbm.start().then(async () => {
 // It will open a browser, return the QR code data as promise and not keep user session
 wbm.start({showBrowser: true, qrCodeData: true, session: false})
 .then(async qrCodeData => {
-	console.log(qrCodeData); // show data used to generate QR Code
-	await wbm.waitQRCode(); 
-	// waitQRCode() is necessary when qrCodeData is true
-	// ...
-	await wbm.end();
+    console.log(qrCodeData); // show data used to generate QR Code
+    await wbm.waitQRCode();
+    // waitQRCode() is necessary when qrCodeData is true
+    // ...
+    await wbm.end();
 } ).catch(err => { console.log(err); });
 ```
 
