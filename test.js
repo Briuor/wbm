@@ -1,7 +1,7 @@
 const wbm = require('./src/index');
 
 (async () => {
-    await wbm.start().then(async () => {
+    await wbm.start({showBrowser: true}).then(async () => {
         const phones = ['5535988841854', '35988841854', '5535988841854'];
         const message = 'Good Morning.';
         await wbm.send(phones, message);

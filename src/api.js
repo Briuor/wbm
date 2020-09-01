@@ -53,6 +53,9 @@ async function start({ showBrowser = false, qrCodeData = false, session = true }
     }
 }
 
+/**
+ * Check if needs to scan qr code or already is is inside the chat
+ */
 function isAuthenticated() {
     console.log('Authenticating...');
     return merge(needsToScan(page), isInsideChat(page))
@@ -72,11 +75,7 @@ function needsToScan() {
 function isInsideChat() {
     return from(
         page
-            .waitForFunction(`
-        document.getElementsByClassName('app')[0] &&
-        document.getElementsByClassName('app')[0].attributes &&
-        !!document.getElementsByClassName('app')[0].attributes.tabindex
-        `,
+            .waitForFunction(`document.getElementsByClassName('h70RQ two')[0]`,
                 {
                     timeout: 0,
                 }).then(() => true)
@@ -107,7 +106,7 @@ async function generateQRCode() {
         const qrcodeData = await getQRCodeData();
         qrcode.generate(qrcodeData, { small: true });
         console.log("QRCode generated! Scan it using Whatsapp App.");
-    } catch {
+    } catch (err) {
         throw await QRCodeExeption("QR Code can't be generated(maybe your connection is too slow).");
     }
     await waitQRCode();
@@ -120,7 +119,7 @@ async function waitQRCode() {
     // if user scan QR Code it will be hidden
     try {
         await page.waitForSelector("div[data-ref]", { timeout: 30000, hidden: true });
-    } catch {
+    } catch (err) {
         throw await QRCodeExeption("Dont't be late to scan the QR Code.");
     }
 }
@@ -150,13 +149,14 @@ async function sendTo(phoneOrContact, message) {
         await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURI(message)}`);
         await page.waitForSelector("div#startup", { hidden: true, timeout: 60000 });
         await page.waitForSelector('div[data-tab="1"]', { timeout: 5000 });
+        
         await page.keyboard.press("Enter");
         await page.waitFor(1000);
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
         process.stdout.write(`${phone} Sent\n`);
         counter.success++;
-    } catch {
+    } catch (err) {
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
         process.stdout.write(`${phone} Failed\n`);
