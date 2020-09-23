@@ -21,7 +21,9 @@ async function start({ showBrowser = false, qrCodeData = false, session = true }
     const args = {
         headless: !showBrowser,
         userDataDir: tmpPath,
-        args: ["--no-sandbox"]
+        args: ["--no-sandbox",
+            // "--blink-settings=imagesEnabled=false"]
+        ]
     }
     try {
         browser = await puppeteer.launch(args);
@@ -146,7 +148,7 @@ async function sendTo(phoneOrContact, message) {
     }
     try {
         process.stdout.write("Sending Message...\r");
-        await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURI(message)}`);
+        await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`);
         await page.waitForSelector("div#startup", { hidden: true, timeout: 60000 });
         await page.waitForSelector('div[data-tab="1"]', { timeout: 5000 });
         
