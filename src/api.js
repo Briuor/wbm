@@ -150,8 +150,7 @@ async function sendTo(phoneOrContact, message) {
         process.stdout.write("Sending Message...\r");
         await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`);
         await page.waitForSelector("div#startup", { hidden: true, timeout: 60000 });
-        await page.waitForSelector('div[data-tab="1"]', { timeout: 5000 });
-        
+        await page.waitForSelector('div[tabindex="-1"]', { timeout: 5000 });
         await page.keyboard.press("Enter");
         await page.waitFor(1000);
         process.stdout.clearLine();
