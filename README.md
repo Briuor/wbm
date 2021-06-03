@@ -7,6 +7,9 @@
 <img style="border-radius: 5px" src="https://raw.githubusercontent.com/Briuor/wbm/master/assets/demo.gif">
 </p>
 
+## Note
+**wbm** is an **unofficial** solution. It's not recommended using **wbm** in your company or for marketing purpose.
+
 ## Installation
 ```bash
 > npm install wbm
@@ -87,6 +90,7 @@ wbm.start().then(async () => {
 	Type: `boolean`<br />
 	* **session**<br />
 	Keep user session, so the user must scan the QR Code once.<br />
+    If you already is authenticated and **wbm** is asking for QR Code, please run using **session: false** once to reset your session. Then you use **session: true** again.<br />
 	Default: `true`<br />
 	Type: `boolean`
 
@@ -161,10 +165,6 @@ wbm.start().then(async () => {
 
 ### end()
 This method must be used at the end of wbm.start() to finish the browser.
-
-
-## Note
-**wbm** is an **unofficial** solution. It's not recommended using **wbm** in your company or for marketing purpose.
 
 ## Contributing
 

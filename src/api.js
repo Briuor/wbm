@@ -10,6 +10,15 @@ let page = null;
 let counter = { fails: 0, success: 0 }
 const tmpPath = path.resolve(__dirname, '../tmp');
 
+const SELECTORS = {
+    LOADING: "progress",
+    INSIDE_CHAT: "document.getElementsByClassName('two')[0]",
+    QRCODE_PAGE: "body > div > div > .landing-wrapper",
+    QRCODE_DATA: "div[data-ref]",
+    QRCODE_DATA_ATTR: "data-ref",
+    SEND_BUTTON: 'div:nth-child(3) > button > span[data-icon="send"]'
+};
+
 /**
  * Initialize browser, page and setup page desktop mode
  */
@@ -68,7 +77,7 @@ function isAuthenticated() {
 function needsToScan() {
     return from(
         page
-            .waitForSelector('body > div > div > .landing-wrapper', {
+            .waitForSelector(SELECTORS.QRCODE_PAGE, {
                 timeout: 0,
             }).then(() => false)
     );
@@ -77,7 +86,7 @@ function needsToScan() {
 function isInsideChat() {
     return from(
         page
-            .waitForFunction(`document.getElementsByClassName('two')[0]`,
+            .waitForFunction(SELECTORS.INSIDE_CHAT,
                 {
                     timeout: 0,
                 }).then(() => true)
@@ -91,11 +100,11 @@ function deleteSession() {
  * return the data used to create the QR Code
  */
 async function getQRCodeData() {
-    await page.waitForSelector("div[data-ref]", { timeout: 60000 });
-    const qrcodeData = await page.evaluate(() => {
-        let qrcodeDiv = document.querySelector("div[data-ref]");
-        return qrcodeDiv.getAttribute("data-ref");
-    });
+    await page.waitForSelector(SELECTORS.QRCODE_DATA, { timeout: 60000 });
+    const qrcodeData = await page.evaluate((SELECTORS) => {
+        let qrcodeDiv = document.querySelector(SELECTORS.QRCODE_DATA);
+        return qrcodeDiv.getAttribute(SELECTORS.QRCODE_DATA_ATTR);
+    }, SELECTORS);
     return await qrcodeData;
 }
 
@@ -120,7 +129,7 @@ async function generateQRCode() {
 async function waitQRCode() {
     // if user scan QR Code it will be hidden
     try {
-        await page.waitForSelector("div[data-ref]", { timeout: 30000, hidden: true });
+        await page.waitForSelector(SELECTORS.QRCODE_PAGE, { timeout: 30000, hidden: true });
     } catch (err) {
         throw await QRCodeExeption("Dont't be late to scan the QR Code.");
     }
@@ -149,8 +158,8 @@ async function sendTo(phoneOrContact, message) {
     try {
         process.stdout.write("Sending Message...\r");
         await page.goto(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`);
-        await page.waitForSelector("div#startup", { hidden: true, timeout: 60000 });
-        await page.waitForSelector('#main > footer > div.vR1LG._3wXwX.copyable-area > div._2A8P4 > div > div._2_1wd.copyable-text.selectable-text', { timeout: 5000 });
+        await page.waitForSelector(SELECTORS.LOADING, { hidden: true, timeout: 60000 });
+        await page.waitForSelector(SELECTORS.SEND_BUTTON, { timeout: 5000 });
         await page.keyboard.press("Enter");
         await page.waitFor(1000);
         process.stdout.clearLine();
