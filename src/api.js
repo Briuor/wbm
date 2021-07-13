@@ -16,7 +16,7 @@ const SELECTORS = {
     QRCODE_PAGE: "body > div > div > .landing-wrapper",
     QRCODE_DATA: "div[data-ref]",
     QRCODE_DATA_ATTR: "data-ref",
-    SEND_BUTTON: 'div:nth-child(3) > button > span[data-icon="send"]'
+    SEND_BUTTON: 'div:nth-child(2) > button > span[data-icon="send"]'
 };
 
 /**
